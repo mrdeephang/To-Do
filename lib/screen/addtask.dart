@@ -6,6 +6,7 @@ import 'package:to_do/models/task.dart';
 import 'package:to_do/providers/todo_provider.dart';
 
 class AddTaskScreen extends StatefulWidget {
+  //statuful cause we need dynamic interative ui, setstate() is the internal state
   const AddTaskScreen({super.key});
 
   @override

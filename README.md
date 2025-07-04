@@ -50,11 +50,10 @@ A beautiful and productive Flutter to-do list app with task scheduling.
 ## Todo
 
 - Improve UI
-- Add task categories
-- Implement cloud sync
-- Add reminder
+- Add Task Categories
+- Implement Cloud Sync
+- Add Reminder
 - Add Exact Time
-- Integrate some possible APIs
 
 ## Author
 
