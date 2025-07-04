@@ -15,10 +15,10 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => TodoProvider(),
       child: MaterialApp(
-        title: 'Elegant To-Do',
+        title: 'To-Do',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.indigo,
+          primarySwatch: Colors.blue,
           fontFamily: 'Poppins',
           appBarTheme: const AppBarTheme(elevation: 0, centerTitle: true),
         ),

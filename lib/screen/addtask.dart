@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:to_do/EasyConst/color.dart';
 import 'package:to_do/models/task.dart';
 import 'package:to_do/providers/todo_provider.dart';
 
@@ -52,7 +53,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add New Task')),
+      appBar: AppBar(
+        backgroundColor: color,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: color1),
+        title: const Text(
+          'Add New Task',
+          style: TextStyle(
+            color: color1,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -79,14 +92,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
               const SizedBox(height: 16),
               ListTile(
-                leading: const Icon(Icons.calendar_today),
+                leading: const Icon(Icons.calendar_today, color: color),
                 title: Text(
                   _dueDate == null
                       ? 'Select due date'
                       : DateFormat.yMMMd().format(_dueDate!),
                 ),
                 trailing: IconButton(
-                  icon: const Icon(Icons.edit),
+                  icon: const Icon(Icons.edit, color: color),
                   onPressed: () => _selectDate(context),
                 ),
               ),
@@ -96,7 +109,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: _submit,
-                  child: const Text('Add Task'),
+                  child: const Text(
+                    'Add Task',
+                    style: TextStyle(
+                      fontFamily: "poppins",
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                  ),
                 ),
               ),
             ],

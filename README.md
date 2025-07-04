@@ -29,7 +29,7 @@ A beautiful and productive Flutter to-do list app with task scheduling.
 ## Requirements
 
 - Flutter installed
-- Android Studio or VS Code
+- Android Studio(compulsary) or VS Code
 - Emulator or physical device
 
 ## How to Run
@@ -52,7 +52,9 @@ A beautiful and productive Flutter to-do list app with task scheduling.
 - Improve UI
 - Add task categories
 - Implement cloud sync
-- Add reminder notifications
+- Add reminder
+- Add Exact Time
+- Integrate some possible APIs
 
 ## Author
 
