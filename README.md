@@ -4,7 +4,7 @@ A beautiful and productive Flutter to-do list app with task scheduling.
 
 ---
 
-## Features ✨
+## Features
 
 - Add tasks with titles and descriptions
 - Set due dates and times for tasks
@@ -12,13 +12,13 @@ A beautiful and productive Flutter to-do list app with task scheduling.
 - Clean Material Design UI
 - Light/dark theme support
 
-## Requirements ⚙️
+## Requirements
 
 - Flutter SDK (v3.0+)
 - Android Studio or VS Code
 - Emulator or physical device
 
-## How to Run ▶️
+## How to Run
 
 1. Clone the repository:
    ```bash
