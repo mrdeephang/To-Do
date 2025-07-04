@@ -40,12 +40,12 @@ A beautiful and productive Flutter to-do list app with task scheduling.
 
 ## Folder Structure
 
-lib/
-├── models/ # Data models
-├── providers/ # State management
-├── screens/ # App screens
-├── widgets/ # Reusable components
-└── main.dart # App entry point
+└── lib/
+├── 📄 main.dart
+├── 📂 models/
+├── 📂 providers/
+├── 📂 screens/
+└── 📂 widgets/
 
 ## Todo
 
