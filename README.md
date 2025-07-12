@@ -41,11 +41,16 @@ A beautiful and productive Flutter to-do list app with task scheduling.
 ## Folder Structure
 
 └── lib/
-├── 📄 main.dart
-├── 📂 models/
-├── 📂 providers/
-├── 📂 screens/
-└── 📂 widgets/
+├── main.dart
+├── models/
+├── providers/
+├── screens/
+└── widgets/
+├── database/
+│ ├── todo_database.dart # Main database class
+│ └── migrations/ # Database migrations
+│ ├── migration_1.dart # Initial schema
+│ └── migration_2.dart # Example future migration
 
 ## Todo
 

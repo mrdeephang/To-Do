@@ -1,10 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:to_do/providers/theme_provider.dart';
 import 'package:to_do/providers/todo_provider.dart';
 import 'package:to_do/screen/homescreen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //Theme provider initialization
+  final themeProvider = ThemeProvider();
+  await themeProvider.loadThemePrefs();
+
+  //Todo provider initialization
+  final todoProvider = TodoProvider();
+  await todoProvider.loadTodos();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => themeProvider), // provider for
+        ChangeNotifierProvider(
+          create: (_) => todoProvider,
+        ), // provider for todos
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,18 +33,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => TodoProvider(),
-      child: MaterialApp(
-        title: 'To-Do',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          fontFamily: 'Poppins',
-          appBarTheme: const AppBarTheme(elevation: 0, centerTitle: true),
-        ),
-        home: const HomeScreen(),
-      ),
+    return MaterialApp(
+      title: 'Todo App',
+      theme: ThemeData.light(), // Light theme
+      darkTheme: ThemeData.dark(), // Dark theme
+      themeMode: Provider.of<ThemeProvider>(context).themeMode,
+      debugShowCheckedModeBanner: false,
+      home: const HomeScreen(),
     );
   }
 }

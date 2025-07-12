@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do/EasyConst/color.dart';
+import 'package:to_do/providers/theme_provider.dart';
 import 'package:to_do/providers/todo_provider.dart';
 import 'package:to_do/screen/addtask.dart';
 import 'package:to_do/widget/empty.dart';
@@ -17,21 +18,48 @@ class HomeScreen extends StatelessWidget {
         title: const Text(
           'TO DO',
           style: TextStyle(
-            fontFamily: "poppins",
-            fontSize: 20,
-            color: Colors.white,
+            color: color1,
             fontWeight: FontWeight.bold,
+            fontSize: 22,
           ),
         ),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_sweep, color: color1),
-            onPressed: () => context.read<TodoProvider>().clearCompleted(),
+            onPressed: () => Provider.of<TodoProvider>(
+              context,
+              listen: false,
+            ).clearCompleted(),
+          ),
+
+          IconButton(
+            icon: Consumer<ThemeProvider>(
+              builder: (context, themeProvider, _) => Icon(
+                themeProvider.themeMode == ThemeMode.dark
+                    ? Icons.light_mode
+                    : Icons.dark_mode,
+                color: color1,
+              ),
+            ),
+            onPressed: () {
+              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+              Provider.of<TodoProvider>(
+                context,
+                listen: false,
+              ).loadTodos(); // Existing refresh
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings, color: color1),
+            onPressed: () {
+              // Navigate to settings screen if implemented
+            },
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add, color: color),
+        child: const Icon(Icons.add),
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const AddTaskScreen()),
@@ -39,16 +67,45 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Consumer<TodoProvider>(
         builder: (context, provider, child) {
-          if (provider.todos.isEmpty) {
+          if (provider.todos.isEmpty && provider.completedTodos.isEmpty) {
             return const EmptyState();
           }
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: provider.todos.length,
-            itemBuilder: (context, index) {
-              final todo = provider.todos[index];
-              return TaskCard(todo: todo);
-            },
+          return CustomScrollView(
+            slivers: [
+              if (provider.todos.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                    child: Text(
+                      'Active Tasks (${provider.todos.length})',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => TaskCard(todo: provider.todos[index]),
+                  childCount: provider.todos.length,
+                ),
+              ),
+              if (provider.completedTodos.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                    child: Text(
+                      'Completed (${provider.completedTodos.length})',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) =>
+                      TaskCard(todo: provider.completedTodos[index]),
+                  childCount: provider.completedTodos.length,
+                ),
+              ),
+            ],
           );
         },
       ),

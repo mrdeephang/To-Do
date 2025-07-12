@@ -6,7 +6,6 @@ import 'package:to_do/models/task.dart';
 import 'package:to_do/providers/todo_provider.dart';
 
 class AddTaskScreen extends StatefulWidget {
-  //statuful cause we need dynamic interative ui, setstate() is the internal state
   const AddTaskScreen({super.key});
 
   @override
@@ -33,7 +32,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
-    if (picked != null) {
+    if (picked != null && mounted) {
       setState(() => _dueDate = picked);
     }
   }
@@ -43,11 +42,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     final newTodo = TodoItem(
       title: _titleController.text,
-      description: _descriptionController.text,
+      description: _descriptionController.text.isEmpty
+          ? null
+          : _descriptionController.text,
       dueDate: _dueDate,
     );
 
-    context.read<TodoProvider>().addTodo(newTodo);
+    Provider.of<TodoProvider>(context, listen: false).addTodo(newTodo);
     Navigator.pop(context);
   }
 
@@ -57,15 +58,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       appBar: AppBar(
         backgroundColor: color,
         centerTitle: true,
-        iconTheme: IconThemeData(color: color1),
         title: const Text(
-          'Add New Task',
+          'Add Task',
           style: TextStyle(
             color: color1,
+            fontSize: 22,
             fontWeight: FontWeight.bold,
-            fontSize: 20,
           ),
         ),
+        iconTheme: const IconThemeData(color: color1),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -93,14 +94,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
               const SizedBox(height: 16),
               ListTile(
-                leading: const Icon(Icons.calendar_today, color: color),
+                leading: const Icon(Icons.calendar_today),
                 title: Text(
                   _dueDate == null
                       ? 'Select due date'
                       : DateFormat.yMMMd().format(_dueDate!),
                 ),
                 trailing: IconButton(
-                  icon: const Icon(Icons.edit, color: color),
+                  icon: const Icon(Icons.edit),
                   onPressed: () => _selectDate(context),
                 ),
               ),
@@ -110,15 +111,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: _submit,
-                  child: const Text(
-                    'Add Task',
-                    style: TextStyle(
-                      fontFamily: "poppins",
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                    ),
-                  ),
+                  child: const Text('Add Task'),
                 ),
               ),
             ],
