@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:to_do/EasyConst/styles.dart';
 import 'package:to_do/models/task.dart';
 import 'package:to_do/providers/todo_provider.dart';
 import 'package:to_do/providers/theme_provider.dart'; // NEW IMPORT
@@ -15,7 +16,7 @@ class TaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(
       context,
-    ); // NEW: Get theme provider
+    ); //Get theme provider
     final bool isDarkMode =
         themeProvider.themeMode == ThemeMode.dark ||
         (themeProvider.themeMode == ThemeMode.system &&
@@ -27,36 +28,37 @@ class TaskCard extends StatelessWidget {
     final Color secondaryTextColor = isDarkMode
         ? Colors.grey[400]!
         : Colors.grey[600]!;
-    final Color checkboxColor = isDarkMode
-        ? Colors.blue[200]!
-        : color; // Using your existing color constant
+    final Color checkboxColor = isDarkMode ? Colors.blue[200]! : color;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Slidable(
-        endActionPane: ActionPane(
-          motion: const ScrollMotion(),
-          children: [
-            SlidableAction(
-              onPressed: (_) => _confirmDelete(context),
-              backgroundColor: Colors.red[400]!,
-              foregroundColor: Colors.white,
-              icon: Icons.delete,
-              label: 'Delete',
+      child: InkWell(
+        // MOVED TO OUTSIDE SLIDABLE
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => _showTaskDetails(context),
+        child: Slidable(
+          // NOW INSIDE INKWELL
+          endActionPane: ActionPane(
+            motion: const ScrollMotion(),
+            children: [
+              SlidableAction(
+                onPressed: (_) => _confirmDelete(context),
+                backgroundColor: Colors.red[400]!,
+                foregroundColor: Colors.white,
+                icon: Icons.delete,
+                label: 'Delete',
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ],
+          ),
+          child: Card(
+            color: cardColor,
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-          ],
-        ),
-        child: Card(
-          color: cardColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 1,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(12),
-            onTap: () => _showTaskDetails(context),
+            elevation: 1,
             child: Padding(
+              // REMOVED INKWELL FROM HERE
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: CheckboxListTile(
                 contentPadding: const EdgeInsets.only(left: 8, right: 16),
@@ -143,8 +145,11 @@ class TaskCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Task'),
-        content: const Text('Are you sure you want to delete this task?'),
+        title: const Text('Confirm '),
+        content: const Text(
+          'Are you sure to delete?',
+          style: TextStyle(fontSize: 18),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -159,8 +164,12 @@ class TaskCard extends StatelessWidget {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Task deleted'),
-                  duration: Duration(seconds: 1),
+                  backgroundColor: color,
+                  content: Text(
+                    'Task deleted!',
+                    style: TextStyle(fontSize: 18, color: color1),
+                  ),
+                  duration: Duration(seconds: 2),
                 ),
               );
             },

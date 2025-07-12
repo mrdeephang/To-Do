@@ -50,16 +50,11 @@ class HomeScreen extends StatelessWidget {
               ).loadTodos(); // Existing refresh
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.settings, color: color1),
-            onPressed: () {
-              // Navigate to settings screen if implemented
-            },
-          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        backgroundColor: color,
+        child: const Icon(Icons.add, color: color1),
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const AddTaskScreen()),
