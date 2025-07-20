@@ -72,7 +72,7 @@ class HomeScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                     child: Text(
-                      'Active Tasks (${provider.todos.length})',
+                      'Active Tasks(${provider.todos.length})',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),

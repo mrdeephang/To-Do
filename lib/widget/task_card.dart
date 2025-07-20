@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do/EasyConst/styles.dart';
 import 'package:to_do/models/task.dart';
 import 'package:to_do/providers/todo_provider.dart';
 import 'package:to_do/providers/theme_provider.dart'; // NEW IMPORT
