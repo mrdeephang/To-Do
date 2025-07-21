@@ -14,6 +14,7 @@ void main() async {
   //Todo provider initialization
   final todoProvider = TodoProvider();
   await todoProvider.loadTodos();
+  //Both above providers are initialized before the app starts to ensure consistent state
 
   runApp(
     MultiProvider(
