@@ -19,12 +19,6 @@ A beautiful and productive Flutter to-do list app with task scheduling.
 - Android Studio or VS Code
 - Emulator or physical device
 
-## Requirements
-
-- Flutter installed
-- Android Studio(compulsary) or VS Code
-- Emulator or physical device
-
 ## Folder Structure
 
 └─ lib/
