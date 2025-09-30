@@ -15,9 +15,12 @@ class EmptyState extends StatelessWidget {
             color: Colors.grey.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
-          Text('No tasks yet!', style: Theme.of(context).textTheme.titleLarge),
+          Text('No tasks yet!', style: TextStyle(color: Colors.grey)),
           const SizedBox(height: 8),
-          const Text('Tap the + button to add'),
+          const Text(
+            'Tap the + button to add',
+            style: TextStyle(color: Colors.grey),
+          ),
         ],
       ),
     );

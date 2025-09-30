@@ -4,23 +4,13 @@ import 'package:to_do/providers/theme_provider.dart';
 import 'package:to_do/providers/todo_provider.dart';
 import 'package:to_do/screen/homescreen.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  //Theme provider initialization
-  final themeProvider = ThemeProvider();
-  await themeProvider.loadThemePrefs();
-
-  //Todo provider initialization
-  final todoProvider = TodoProvider();
-  await todoProvider.loadTodos();
-  //Both above providers are initialized before the app starts to ensure consistent state
-
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => themeProvider),
-        ChangeNotifierProvider(create: (_) => todoProvider),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => TodoProvider()),
       ],
       child: const MyApp(),
     ),
@@ -34,9 +24,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Todo',
-      theme: ThemeData.light(), // Light theme
-      darkTheme: ThemeData.dark(), // Dark theme
-      themeMode: Provider.of<ThemeProvider>(context).themeMode,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: Provider.of<ThemeProvider>(context).isDarkMode
+          ? ThemeMode.dark
+          : ThemeMode.light,
       debugShowCheckedModeBanner: false,
       home: const HomeScreen(),
     );

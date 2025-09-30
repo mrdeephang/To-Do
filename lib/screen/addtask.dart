@@ -57,21 +57,18 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:
-            Provider.of<ThemeProvider>(context, listen: false).isDarkMode
+        backgroundColor: Provider.of<ThemeProvider>(context).isDarkMode
             ? color2
             : color,
-        centerTitle: true,
-        title: const Text(
-          'Add Task',
-          style: TextStyle(
-            color: color1,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
+        title: const Text('Add Task', style: TextStyle(color: Colors.white)),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back, color: Colors.white),
         ),
-        iconTheme: const IconThemeData(color: color1),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -111,11 +108,20 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
               const Spacer(),
               SizedBox(
-                width: double.infinity,
+                width: MediaQuery.of(context).size.width * 0.5,
                 height: 50,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Provider.of<ThemeProvider>(context).isDarkMode
+                        ? color2
+                        : color,
+                  ),
                   onPressed: _submit,
-                  child: const Text('Add Task'),
+                  child: const Text(
+                    'Add Task',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ],

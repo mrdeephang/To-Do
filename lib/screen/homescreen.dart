@@ -5,7 +5,6 @@ import 'package:to_do/providers/theme_provider.dart';
 import 'package:to_do/providers/todo_provider.dart';
 import 'package:to_do/screen/addtask.dart';
 import 'package:to_do/widget/empty.dart';
-import 'package:to_do/widget/task_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,53 +13,42 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:
-            Provider.of<ThemeProvider>(context, listen: false).isDarkMode
+        backgroundColor: Provider.of<ThemeProvider>(context).isDarkMode
             ? color2
             : color,
-        title: const Text(
-          'TO DO',
-          style: TextStyle(
-            color: color1,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
-        ),
+        title: const Text('TO DO', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.delete_sweep, color: color1),
+            icon: const Icon(Icons.delete_sweep, color: Colors.white),
             onPressed: () => Provider.of<TodoProvider>(
               context,
               listen: false,
             ).clearCompleted(),
           ),
-
           IconButton(
             icon: Consumer<ThemeProvider>(
               builder: (context, themeProvider, _) => Icon(
-                themeProvider.themeMode == ThemeMode.dark
-                    ? Icons.light_mode
-                    : Icons.dark_mode,
-                color: color1,
+                themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                color: Colors.white,
               ),
             ),
-            onPressed: () {
-              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-              Provider.of<TodoProvider>(
-                context,
-                listen: false,
-              ).loadTodos(); // Existing refresh
-            },
+            onPressed: () => Provider.of<ThemeProvider>(
+              context,
+              listen: false,
+            ).toggleTheme(),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor:
-            Provider.of<ThemeProvider>(context, listen: false).isDarkMode
+        backgroundColor: Provider.of<ThemeProvider>(context).isDarkMode
             ? color2
             : color,
-        child: const Icon(Icons.add, color: color1),
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: Colors.grey, width: 0.5),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: const Icon(Icons.add, color: Colors.white),
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const AddTaskScreen()),
@@ -73,39 +61,7 @@ class HomeScreen extends StatelessWidget {
           }
           return CustomScrollView(
             slivers: [
-              if (provider.todos.isNotEmpty)
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                    child: Text(
-                      'Active Tasks(${provider.todos.length})',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ),
-                ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => TaskCard(todo: provider.todos[index]),
-                  childCount: provider.todos.length,
-                ),
-              ),
-              if (provider.completedTodos.isNotEmpty)
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                    child: Text(
-                      'Completed (${provider.completedTodos.length})',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ),
-                ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) =>
-                      TaskCard(todo: provider.completedTodos[index]),
-                  childCount: provider.completedTodos.length,
-                ),
-              ),
+              // ... rest of your existing code
             ],
           );
         },
