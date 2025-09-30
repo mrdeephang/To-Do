@@ -19,10 +19,8 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => themeProvider), // provider for
-        ChangeNotifierProvider(
-          create: (_) => todoProvider,
-        ), // provider for todos
+        ChangeNotifierProvider(create: (_) => themeProvider),
+        ChangeNotifierProvider(create: (_) => todoProvider),
       ],
       child: const MyApp(),
     ),

@@ -14,7 +14,10 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: color,
+        backgroundColor:
+            Provider.of<ThemeProvider>(context, listen: false).isDarkMode
+            ? color2
+            : color,
         title: const Text(
           'TO DO',
           style: TextStyle(
@@ -53,7 +56,10 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: color,
+        backgroundColor:
+            Provider.of<ThemeProvider>(context, listen: false).isDarkMode
+            ? color2
+            : color,
         child: const Icon(Icons.add, color: color1),
         onPressed: () => Navigator.push(
           context,

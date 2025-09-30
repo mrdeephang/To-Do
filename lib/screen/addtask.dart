@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do/EasyConst/color.dart';
 import 'package:to_do/models/task.dart';
+import 'package:to_do/providers/theme_provider.dart';
 import 'package:to_do/providers/todo_provider.dart';
 
 class AddTaskScreen extends StatefulWidget {
@@ -56,7 +57,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: color,
+        backgroundColor:
+            Provider.of<ThemeProvider>(context, listen: false).isDarkMode
+            ? color2
+            : color,
         centerTitle: true,
         title: const Text(
           'Add Task',
