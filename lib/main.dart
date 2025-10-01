@@ -17,20 +17,36 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Todo',
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      themeMode: Provider.of<ThemeProvider>(context).isDarkMode
-          ? ThemeMode.dark
-          : ThemeMode.light,
-      debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        // Show loading until theme is initialized
+        if (!themeProvider.isThemeLoaded) {
+          return MaterialApp(
+            home: Scaffold(body: Center(child: CircularProgressIndicator())),
+          );
+        }
+
+        return MaterialApp(
+          title: 'Todo',
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
+          themeMode: themeProvider.isDarkMode
+              ? ThemeMode.dark
+              : ThemeMode.light,
+          debugShowCheckedModeBanner: false,
+          home: const HomeScreen(),
+        );
+      },
     );
   }
 }

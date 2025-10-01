@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do/models/task.dart';
 import 'package:to_do/providers/todo_provider.dart';
+import 'package:to_do/providers/theme_provider.dart';
+import 'package:to_do/EasyConst/color.dart';
 
 class TaskCard extends StatelessWidget {
   final TodoItem todo;
@@ -11,6 +13,8 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
@@ -34,10 +38,12 @@ class TaskCard extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            elevation: 1,
+            elevation: themeProvider.isDarkMode ? 2 : 1,
+            color: themeProvider.isDarkMode ? Colors.grey[800] : Colors.white,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: CheckboxListTile(
+                checkColor: Colors.blueGrey,
                 contentPadding: const EdgeInsets.only(left: 8, right: 16),
                 title: Text(
                   todo.title,
@@ -47,16 +53,25 @@ class TaskCard extends StatelessWidget {
                         : TextDecoration.none,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
+                    color: themeProvider.isDarkMode
+                        ? Colors.white
+                        : Colors.black87,
                   ),
                 ),
                 subtitle: _buildSubtitle(context),
-                secondary: const Icon(Icons.drag_handle),
+                secondary: Icon(
+                  Icons.drag_handle,
+                  color: themeProvider.isDarkMode
+                      ? Colors.grey[400]
+                      : Colors.grey[600],
+                ),
                 controlAffinity: ListTileControlAffinity.leading,
                 value: todo.isCompleted,
                 onChanged: (_) => _toggleStatus(context),
                 checkboxShape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4),
                 ),
+                activeColor: themeProvider.isDarkMode ? color2 : color,
               ),
             ),
           ),
@@ -66,6 +81,12 @@ class TaskCard extends StatelessWidget {
   }
 
   Widget? _buildSubtitle(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final bool isOverdue =
+        todo.dueDate != null &&
+        todo.dueDate!.isBefore(DateTime.now()) &&
+        !todo.isCompleted;
+
     if (todo.description?.isNotEmpty == true || todo.dueDate != null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +96,12 @@ class TaskCard extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 4),
               child: Text(
                 todo.description!,
-                style: const TextStyle(fontSize: 14),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: themeProvider.isDarkMode
+                      ? Colors.grey[400]
+                      : Colors.grey[700],
+                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -86,24 +112,45 @@ class TaskCard extends StatelessWidget {
                 Icon(
                   Icons.calendar_today,
                   size: 14,
-                  color:
-                      todo.dueDate!.isBefore(DateTime.now()) &&
-                          !todo.isCompleted
+                  color: isOverdue
                       ? Colors.red
-                      : null,
+                      : (themeProvider.isDarkMode
+                            ? Colors.grey[400]
+                            : Colors.grey[600]),
                 ),
                 const SizedBox(width: 4),
                 Text(
                   DateFormat('MMM d, y • h:mm a').format(todo.dueDate!),
                   style: TextStyle(
                     fontSize: 12,
-                    color:
-                        todo.dueDate!.isBefore(DateTime.now()) &&
-                            !todo.isCompleted
+                    color: isOverdue
                         ? Colors.red
-                        : null,
+                        : (themeProvider.isDarkMode
+                              ? Colors.grey[400]
+                              : Colors.grey[600]),
                   ),
                 ),
+                if (isOverdue) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'Overdue',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
         ],
@@ -135,9 +182,16 @@ class TaskCard extends StatelessWidget {
               ).deleteTodo(todo.id);
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Task deleted!'),
-                  duration: Duration(seconds: 2),
+                SnackBar(
+                  content: const Text(
+                    'Task deleted!',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  duration: const Duration(seconds: 2),
+                  backgroundColor:
+                      Provider.of<ThemeProvider>(context).isDarkMode
+                      ? color2
+                      : color,
                 ),
               );
             },
@@ -149,9 +203,21 @@ class TaskCard extends StatelessWidget {
   }
 
   void _showTaskDetails(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final bool isOverdue =
+        todo.dueDate != null &&
+        todo.dueDate!.isBefore(DateTime.now()) &&
+        !todo.isCompleted;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: themeProvider.isDarkMode
+          ? Colors.grey[800]
+          : Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
       builder: (context) => Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -162,39 +228,140 @@ class TaskCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                todo.title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      todo.title,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: themeProvider.isDarkMode
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                  ),
+                  if (todo.isCompleted)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Text(
+                        'Completed',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                ],
               ),
+
               if (todo.description?.isNotEmpty == true) ...[
                 const SizedBox(height: 16),
-                Text(todo.description!),
-              ],
-              if (todo.dueDate != null) ...[
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.calendar_today,
-                      size: 16,
-                      color:
-                          todo.dueDate!.isBefore(DateTime.now()) &&
-                              !todo.isCompleted
-                          ? Colors.red
-                          : null,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(DateFormat.yMMMMd().add_jm().format(todo.dueDate!)),
-                  ],
+                Text(
+                  todo.description!,
+                  style: TextStyle(
+                    color: themeProvider.isDarkMode
+                        ? Colors.grey[300]
+                        : Colors.grey[700],
+                  ),
                 ),
               ],
+
+              if (todo.dueDate != null) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: isOverdue
+                        ? Colors.red.withOpacity(0.1)
+                        : (themeProvider.isDarkMode
+                              ? Colors.grey[700]
+                              : Colors.grey[100]),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        size: 18,
+                        color: isOverdue
+                            ? Colors.red
+                            : (themeProvider.isDarkMode
+                                  ? Colors.grey[400]
+                                  : Colors.grey[600]),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Due Date',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: themeProvider.isDarkMode
+                                    ? Colors.grey[400]
+                                    : Colors.grey[600],
+                              ),
+                            ),
+                            Text(
+                              DateFormat.yMMMMd().add_jm().format(
+                                todo.dueDate!,
+                              ),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: isOverdue
+                                    ? Colors.red
+                                    : (themeProvider.isDarkMode
+                                          ? Colors.white
+                                          : Colors.black87),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (isOverdue)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            'OVERDUE',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: themeProvider.isDarkMode ? color2 : color,
+                    foregroundColor: Colors.white,
+                  ),
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Close'),
                 ),

@@ -5,9 +5,28 @@ import 'package:to_do/providers/theme_provider.dart';
 import 'package:to_do/providers/todo_provider.dart';
 import 'package:to_do/screen/addtask.dart';
 import 'package:to_do/widget/empty.dart';
+import 'package:to_do/widget/todo_list.dart'; // Add this import
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
+  }
+
+  void _initializeData() {
+    // Load todos from database
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<TodoProvider>(context, listen: false).loadTodos();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +78,7 @@ class HomeScreen extends StatelessWidget {
           if (provider.todos.isEmpty && provider.completedTodos.isEmpty) {
             return const EmptyState();
           }
-          return CustomScrollView(
-            slivers: [
-              // ... rest of your existing code
-            ],
-          );
+          return const TodoList(); // Use the TodoList widget here
         },
       ),
     );
